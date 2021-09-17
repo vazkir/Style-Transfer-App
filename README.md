@@ -1,7 +1,8 @@
-AC215-Template
+Style Transfer App
 ==============================
+Harvard AC215
 
-AC215
+
 
 Project Organization
 ------------
