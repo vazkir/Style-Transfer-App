@@ -3,8 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-## Mac DS STORE
+# Mac DS STORE
 .DS_Store
+
+# Data directory where images are stored
+data
 
 # C extensions
 *.so
