@@ -28,7 +28,7 @@ dependencies:
   - pip:
     - configparser
     - flatbuffers
-    - flickrapi
+    - flickrapi==3.0.dev0
     - pydot
     - selenium
     - webdriver-manager
