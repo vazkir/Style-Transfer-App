@@ -4,9 +4,9 @@ Harvard AC215
 
 
 
-## Installation
+## Setup
 
-### MacOS setup
+### MacOS Installation
 
 You can create the required MacOs conda env with
 
@@ -20,7 +20,7 @@ Then you can start the conda env with:
 conda activate MLOpsProject
 ```
 
-### Windows setup
+### Windows Installation
 The environment.yml contains tensorflow packages specific to MacOS like "tensorflow-macos" and "tensorflow-metal". So you would probably need to remove those and maybe any required tensorflow package to get it to install.
 
 Once installed you can start the conda env with:
@@ -29,9 +29,25 @@ Once installed you can start the conda env with:
 conda activate MLOpsProject
 ```
 
+## Required setup
+You will need to create a .env file with following information in the root of the project:
+```
+export FLICKR_KEY=FILL_OUT
+export FLICKR_SECRET=FILL_OUT
+export PINTEREST_USER=FILL_OUT
+export PINTEREST_PASS=FILL_OUT
+```
+To obtain this information you will need to [create an account](https://pinterest.com/) on pinterest and [sign up for a Flicker API key](https://identity.flickr.com/sign-up)
 
 
 ## Scraper Usage
+
+
+### Get to the righ directory!
+Move into the src directory before you run the commands listed below:
+```bash
+cd src
+```
 
 ### Scrape Flickr -> Pulls data from their api
 
