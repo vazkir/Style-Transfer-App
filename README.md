@@ -8,10 +8,10 @@ Harvard AC215
 
 ### MacOS Installation
 
-You can create the required MacOs conda env with
+You can create the required MacOs conda env with:
 
 ```bash
-conda env create -f environment.yml
+conda env create -f environment_macos.yml
 ```
 
 Then you can start the conda env with:
@@ -22,6 +22,7 @@ conda activate MLOpsProject
 
 ### Windows Installation
 The environment.yml contains tensorflow packages specific to MacOS like "tensorflow-macos" and "tensorflow-metal". So you would probably need to remove those and maybe any required tensorflow package to get it to install.
+The current (as of 10oct2021) environment.yml file contains the macos packages, but that one can be changed to match the windows installation since there is also a seperate one for macos.
 
 
 When you updated the existing environment.yml or created your own you can create the conda env with:
