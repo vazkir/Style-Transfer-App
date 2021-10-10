@@ -1,4 +1,0 @@
-{
-  "python.defaultInterpreterPath": "/Users/vascomeerman/miniforge3/envs/MLOpsProject/bin/python",
-  "jupyter.notebookFileRoot": "${workspaceFolder}",
-}
