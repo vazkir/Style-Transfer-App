@@ -9,6 +9,9 @@ local_code
 # Mac DS STORE
 .DS_Store
 
+# Local settings
+.vscode
+
 # Data directory where images are stored
 data
 
