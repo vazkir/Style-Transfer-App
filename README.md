@@ -77,7 +77,7 @@ Flags:
 
 
 ```python
-python -m data_collection.pinterest -t -mc 3 "dotpainting_on_rocks" -u "https://nl.pinterest.com/ideas/architecture/918105274631/"
+python -m data_collection.pinterest -t "dotpainting_on_rocks" -mc 3 -u "https://nl.pinterest.com/ideas/architecture/918105274631/"
 ```
 
 
