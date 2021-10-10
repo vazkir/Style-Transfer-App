@@ -51,16 +51,21 @@ def u_to_s(uni):
 
 class Pinterest_Helper(object):
     
-    def __init__(self, login, pw, browser = None):
-        # if browser is None:
-        #     #http://tarunlalwani.com/post/selenium-disable-image-loading-different-browsers/
-        #     profile = webdriver.FirefoxProfile()
-        #     profile.set_preference("permissions.default.image", 2)
-        #     self.browser = webdriver.Firefox(firefox_profile=profile)
-        # else:
-        #     self.browser = browser
+    def __init__(self, login, pw, maxImgCount=1000, scrollThreshold=500, browser = None):
+        self.maxImgCount = maxImgCount
+        self.scrollThreshold = scrollThreshold
 
-        self.browser = webdriver.Chrome(executable_path="drivers/chromedriver")
+        if browser is None:
+            # #http://tarunlalwani.com/post/selenium-disable-image-loading-different-browsers/
+            # profile = webdriver.FirefoxProfile()
+            # profile.set_preference("permissions.default.image", 2)
+            # self.browser = webdriver.Firefox(firefox_profile=profile)
+            self.browser = webdriver.Chrome(ChromeDriverManager().install())
+
+        else:
+            self.browser = browser
+
+        # self.browser = webdriver.Chrome(executable_path="drivers/chromedriver")
 
         # self.browser = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
         
@@ -93,13 +98,18 @@ class Pinterest_Helper(object):
         return tmp2        
         
     
-    def runme(self,url, threshold = 500, persistence = 120, debug = False):
+    def runme(self,url, persistence = 120, debug = False):
+        threshold = self.scrollThreshold
+        scrapeIsDone = False
+        maxImagesCount = 2
         final_results = []
         previmages = []
         tries = 0
         try:
             self.browser.get(url)
-            while threshold > 0:
+
+            # Checking max scroll threshold and if enough or max count
+            while threshold > 0 and scrapeIsDone == False:
                 try:
                     results = []
                     images = self.browser.find_elements_by_tag_name("img")
@@ -118,11 +128,27 @@ class Pinterest_Helper(object):
                                 src = src.replace("/236x/","/736x/")
                                 results.append(u_to_s(src))
                     previmages = copy.copy(images)
-                    final_results = list(set(final_results + results))
-                    dummy = self.browser.find_element_by_tag_name('a')
-                    dummy.send_keys(Keys.PAGE_DOWN)
-                    randdelay(1,2)
-                    threshold -= 1
+                    final_results_new = list(set(final_results + results))
+
+                    # Check if enough images
+                    if len(final_results_new) > self.maxImgCount:
+                        print(f"Done scraping pinterest because max count reached. Total -> {len(final_results_new)}")
+                        scrapeIsDone = True
+
+                    # Check if no new images are found, make sure not first iteration where both 0
+                    elif len(final_results) > 0 and len(final_results_new) == len(final_results):
+                        print(f"Done scraping pinterest because no new images. Total -> {len(final_results_new)}")
+                        scrapeIsDone = True
+                    else:
+                        dummy = self.browser.find_element_by_tag_name('a')
+                        dummy.send_keys(Keys.PAGE_DOWN)
+                        randdelay(1,2)
+                        threshold -= 1
+
+                    # Set the new images
+                    final_results = final_results_new
+
+
                 except (StaleElementReferenceException):
                     if debug == True:
                         print("StaleElementReferenceException")
@@ -136,7 +162,8 @@ class Pinterest_Helper(object):
             print("Exitting at end")
         return final_results
 
-    def runme_alt(self,url, threshold = 500, tol = 10, minwait = 1, maxwait = 2,debug = False):
+    def runme_alt(self,url, tol = 10, minwait = 1, maxwait = 2,debug = False):
+        threshold = self.scrollThreshold
         final_results = []
         heights = []
         dwait = 0

@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Code for testing locally
+local_code
+
 # Mac DS STORE
 .DS_Store
 

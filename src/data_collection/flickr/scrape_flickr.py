@@ -5,10 +5,10 @@ import time, os, random
 from pprint import pprint
 from flickrapi import FlickrAPI
 import pandas as pd
-
 from data_collection.download_img import download_uri
+from dotenv import load_dotenv
 
-
+load_dotenv()
 key = os.environ["FLICKR_KEY"]
 secret = os.environ["FLICKR_SECRET"]
 
@@ -48,24 +48,28 @@ def get_urls(image_tag, max_count, download=True):
 
         # Grab the current image's flicker API data
         img_data = dict(photo.items())
+        pprint(img_data)
 
         if i < max_count:
             try:
-                url=photo.get('url_o')
+                url=img_data.get('url_o') 
+                print(url)
                 if url is None:
                     url = 'https://farm%s.staticflickr.com/%s/%s_%s_b.jpg' % \
-                          (photo.get('farm'), photo.get('server'), photo.get('id'), photo.get('secret'))  # large size
+                          (img_data.get('farm'), img_data.get('server'), img_data.get('id'), img_data.get('secret'))  # large size
 
                 # download
                 if download:
                     download_uri(url, f"{data_dir}/imgs/")
-                    
+                    print("download done")
                     # Small interval to not overload the downloads (between 0 and 1 second)
                     # print(random.uniform(0, 1))
                     time.sleep(random.uniform(0, 1))
 
+
                 # Add field for url we downloaded from
                 img_data['download_url'] = url
+                print(img_data)
 
                 # Update img info and succes rate
                 all_img_data.append(img_data)

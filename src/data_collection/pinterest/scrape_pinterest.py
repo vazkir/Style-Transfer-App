@@ -5,13 +5,15 @@
 import time, os, random, pprint
 from .scraper import Pinterest_Helper, download
 import pandas as pd
+from dotenv import load_dotenv
 
 # Login credentials
+load_dotenv()
 user = os.environ["PINTEREST_USER"]
 password = os.environ["PINTEREST_PASS"]
 
 # Functionality to scrape the data
-def get_images(pintr_url, tag):
+def get_images(pintr_url, tag, max_count, scroll_threshold = 500):
     print(f"Starting Pinterest downloads from tag '{pintr_url}'..")
     t = time.time()
 
@@ -23,8 +25,9 @@ def get_images(pintr_url, tag):
         os.makedirs(data_dir)
         os.makedirs(img_downl_dir)
 
+
     # Initialize
-    ph = Pinterest_Helper(user, password)
+    ph = Pinterest_Helper(user, password, max_count, scroll_threshold)
     images = ph.runme(pintr_url)
 
     # To store decoded img url strings, see issue:
@@ -40,10 +43,16 @@ def get_images(pintr_url, tag):
     # Download them
     download(img_urls, img_downl_dir)
 
+    # Dict to for pandas csv data info
+    info_dict = {'urls':img_urls}
+
+
     # Write source urls to disk
-    img_urls = pd.Series(img_urls)
+    img_info_df = pd.DataFrame.from_dict(info_dict, orient='columns')
+    img_info_df['tag'] = tag
+
     img_csv_filename = f"{data_dir}/img_data.csv"
-    img_urls.to_csv(img_csv_filename)
+    img_info_df.to_csv(img_csv_filename)
 
     print('Done. (%.1fs)' % (time.time() - t) + ('\nAll images saved to %s' % img_csv_filename))
 
@@ -53,7 +62,10 @@ def main(call_args):
     # Grab and construct vars to pass on
     pintr_url = call_args["url"]
     tag = call_args["tag"]
+    max_count = call_args["max_count"]
+    scroll_threshold = call_args["scroll_threshold"]
+
     
     # Download data from api
-    get_images(pintr_url, tag)
+    get_images(pintr_url, tag, max_count, scroll_threshold)
 

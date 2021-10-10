@@ -1,0 +1,37 @@
+name: MLOpsProject
+channels:
+  - apple
+  - anaconda
+  - conda-forge
+
+dependencies:
+  - python=3.9
+  - scikit-learn
+  - IPython
+  - jupyter
+  - jupyterlab
+  - matplotlib
+  - numpy
+  - pandas
+  - pillow
+  - opencv
+  - pip
+  - requests
+  - seaborn
+  - spacy
+  - statsmodels
+  - progressbar2
+  - setuptools
+  - tensorflow-deps
+  - python-dotenv
+ 
+  - pip:
+    - configparser
+    - flatbuffers
+    - flickrapi
+    - pydot
+    - selenium
+    - webdriver-manager
+    - tensorflow-estimator
+    - tensorflow-macos
+    - tensorflow-metal
