@@ -23,6 +23,13 @@ conda activate MLOpsProject
 ### Windows Installation
 The environment.yml contains tensorflow packages specific to MacOS like "tensorflow-macos" and "tensorflow-metal". So you would probably need to remove those and maybe any required tensorflow package to get it to install.
 
+
+When you updated the existing environment.yml or created your own you can create the conda env with:
+
+```bash
+conda env create -f environment.yml
+```
+
 Once installed you can start the conda env with:
 
 ```bash
