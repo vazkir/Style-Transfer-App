@@ -21,8 +21,11 @@ def get_images(pintr_url, tag, max_count, scroll_threshold = 500):
     data_dir = f"data/pinterest/{tag}"
     img_downl_dir = f"{data_dir}/imgs"
 
+    # Also .csv with general info stored in here
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
+
+    if not os.path.exists(img_downl_dir):
         os.makedirs(img_downl_dir)
 
 

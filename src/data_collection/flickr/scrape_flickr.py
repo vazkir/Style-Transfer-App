@@ -8,6 +8,8 @@ import pandas as pd
 from data_collection.download_img import download_uri
 from dotenv import load_dotenv
 
+from data_collection.download_imgs_pooled import download_imgs_threaded
+
 load_dotenv()
 key = os.environ["FLICKR_KEY"]
 secret = os.environ["FLICKR_SECRET"]
@@ -19,6 +21,7 @@ def etree_to_dict(t):
     d['text'] = t.text
     return d
 
+
 def get_urls(image_tag, max_count, download=True):
     print(f"Starting Flickr downloads from tag '{image_tag}' with max count -> {max_count}..")
     
@@ -26,22 +29,28 @@ def get_urls(image_tag, max_count, download=True):
 
     flickr = FlickrAPI(key, secret)
     photos = flickr.walk(text=image_tag,
-                            tag_mode='all',
+                            tag_mode='all', # # 'any' for an OR combination of tags // 'all' for an an AND combination. 
                             tags=image_tag,
                             extras='url_o',
                             per_page=500,
                             sort='relevance')
 
+
     # Where to store
     data_dir = f"data/flickr/{image_tag}"
+    img_downl_dir = f"{data_dir}/imgs"
 
     if download:
         if not os.path.exists(data_dir):
             os.makedirs(data_dir)
 
+        if not os.path.exists(img_downl_dir):
+            os.makedirs(img_downl_dir)
+
 
     # Img data to store in CSV
     all_img_data = []
+    all_urls = []
     succes_count = 0
 
     for i, photo in enumerate(photos):
@@ -58,17 +67,10 @@ def get_urls(image_tag, max_count, download=True):
                     url = 'https://farm%s.staticflickr.com/%s/%s_%s_b.jpg' % \
                           (img_data.get('farm'), img_data.get('server'), img_data.get('id'), img_data.get('secret'))  # large size
 
-                # download
-                if download:
-                    download_uri(url, f"{data_dir}/imgs/")
-                    print("download done")
-                    # Small interval to not overload the downloads (between 0 and 1 second)
-                    # print(random.uniform(0, 1))
-                    time.sleep(random.uniform(0, 1))
-
 
                 # Add field for url we downloaded from
                 img_data['download_url'] = url
+                all_urls.append(url)
                 print(img_data)
 
                 # Update img info and succes rate
@@ -76,19 +78,22 @@ def get_urls(image_tag, max_count, download=True):
                 succes_count += 1
                 print('%g/%g %s' % (i+1, max_count, url))
                 
-
-
             except:
                 print('%g/%g error...' % (i, max_count))
         else:
-            print("Done fetching urls, fetched {} urls out of {}".format(succes_count, max_count))
+            print("Done grabbing urls to download succces {} urls out of {}".format(succes_count, max_count))
             break
     
+    
+    # Download the actual images
+    download_results = download_imgs_threaded(all_urls, img_downl_dir)
+
+    # Create df from default flickr img data and add url response column
+    df = pd.DataFrame.from_dict(all_img_data, orient='columns')
+    df['url_response'] = download_results['response']
+
     # Save img data to disk as CSV
-    print("Writting img information to CSV")
-    all_img_data_df = pd.DataFrame.from_dict(all_img_data, orient='columns')
-    all_img_data_df.to_csv(f"{data_dir}/img_data.csv")
-    # print(all_img_data_df)
+    df.to_csv(f"{data_dir}/img_data.csv")
 
     print('Done with all. (%.1fs)' % (time.time() - t) + ('\nAll images saved to %s' % dir if download else ''))
 
