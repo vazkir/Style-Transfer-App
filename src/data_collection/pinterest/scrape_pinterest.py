@@ -19,7 +19,7 @@ def get_images(pintr_url, tag, max_count, scroll_threshold = 500):
     t = time.time()
 
     # Where to store
-    data_dir = f"data/pinterest/{tag}"
+    data_dir = f"../data/pinterest/{tag}"
     img_downl_dir = f"{data_dir}/imgs"
 
     # Also .csv with general info stored in here
@@ -51,7 +51,7 @@ def get_images(pintr_url, tag, max_count, scroll_threshold = 500):
     img_info_df = pd.DataFrame.from_dict(download_results, orient='columns')
     img_info_df['tag'] = tag
 
-    img_csv_filename = f"{data_dir}/img_data.csv"
+    img_csv_filename = f"{data_dir}/{tag}_img_data.csv"
     img_info_df.to_csv(img_csv_filename)
 
     print(f"Done with Pintest scraping for tag '{tag}'. {round((time.time() - t),1)}")

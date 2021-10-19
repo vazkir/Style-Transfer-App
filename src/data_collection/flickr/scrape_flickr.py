@@ -37,8 +37,9 @@ def get_urls(image_tag, max_count, download=True):
 
 
     # Where to store
-    data_dir = f"data/flickr/{image_tag}"
+    data_dir = f"../data/flickr/{image_tag}"
     img_downl_dir = f"{data_dir}/imgs"
+
 
     if download:
         if not os.path.exists(data_dir):
@@ -91,7 +92,7 @@ def get_urls(image_tag, max_count, download=True):
     df['url_response'] = download_results['response']
 
     # Save img data to disk as CSV
-    df.to_csv(f"{data_dir}/img_data.csv")
+    df.to_csv(f"{data_dir}/{image_tag}_img_data.csv")
 
     print('Done with  scraping. (%.1fs)' % (time.time() - t) + ('\nAll images saved to %s' % img_downl_dir))
 
