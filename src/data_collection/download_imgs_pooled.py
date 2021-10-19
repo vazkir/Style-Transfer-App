@@ -39,7 +39,7 @@ def fetch_url(url, save_dir, max_requesttime=5):
     return response.status_code
 
 
-def download_imgs_threaded(urls, save_dir, max_batch_pause=2):
+def download_imgs_threaded(urls, save_dir, max_batch_pause=3):
     
     # Multi-thread
     t = timer()
