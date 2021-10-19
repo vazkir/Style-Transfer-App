@@ -1,0 +1,14 @@
+,urls,response,tag
+0,https://i.pinimg.com/736x/96/b2/33/96b2333213437d8349a073290c6371e3.jpg,200,dotpainting_on_rocks
+1,https://i.pinimg.com/736x/1c/eb/53/1ceb5372d4bc7645433c4368b08111c8.jpg,200,dotpainting_on_rocks
+2,https://i.pinimg.com/736x/04/e5/b5/04e5b5baaa75daa96aedaa9bea0a2c19.jpg,200,dotpainting_on_rocks
+3,https://i.pinimg.com/736x/2b/f2/b2/2bf2b285bdeddc75b6ff74f97179c0fe.jpg,200,dotpainting_on_rocks
+4,https://i.pinimg.com/736x/e5/c3/da/e5c3dac2f31493f4260d66364aa19c15.jpg,200,dotpainting_on_rocks
+5,https://i.pinimg.com/736x/95/b5/29/95b5295a7c902a9a31c56f2cefe5d6c1.jpg,200,dotpainting_on_rocks
+6,https://i.pinimg.com/736x/cc/da/d1/ccdad15fa6418d27adf9b984dd7a0257.jpg,"HTTPSConnectionPool(host='i.pinimg.com', port=443): Max retries exceeded with url: /736x/cc/da/d1/ccdad15fa6418d27adf9b984dd7a0257.jpg (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1129)')))",dotpainting_on_rocks
+7,https://i.pinimg.com/736x/e0/01/2d/e0012ded09356cb1f4f6ce9a4a78d142.jpg,200,dotpainting_on_rocks
+8,https://i.pinimg.com/736x/a3/88/77/a38877d318847e42582f8ea1d544ecd5.jpg,200,dotpainting_on_rocks
+9,https://i.pinimg.com/736x/27/4c/14/274c1423a0b5a62b3ca51139c16cd773.jpg,200,dotpainting_on_rocks
+10,https://i.pinimg.com/736x/d9/29/00/d92900ad326cf9c2944f604e922c3d33.jpg,200,dotpainting_on_rocks
+11,https://i.pinimg.com/736x/f3/19/2c/f3192ccb2462f23bf70ba792fc4654b2.jpg,200,dotpainting_on_rocks
+12,https://i.pinimg.com/736x/38/aa/c6/38aac6bc36a364fd7035d66c185fc4b0.jpg,200,dotpainting_on_rocks

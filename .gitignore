@@ -1,7 +1,10 @@
 
 # Actual images not to git
-data/*
+# data/*
 
+data/**/**/*.*
+# !data/**/*.csv
+!data/**/**/*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
