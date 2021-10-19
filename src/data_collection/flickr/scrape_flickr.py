@@ -89,7 +89,7 @@ def get_urls(image_tag, max_count, download=True):
 
     # Create df from default flickr img data and add url response column
     df = pd.DataFrame.from_dict(all_img_data, orient='columns')
-    df['url_response'] = download_results['response']
+    df['url_response'], df['tag'] = (download_results['response'], image_tag)
 
     # Save img data to disk as CSV
     df.to_csv(f"{data_dir}/{image_tag}_img_data.csv")
