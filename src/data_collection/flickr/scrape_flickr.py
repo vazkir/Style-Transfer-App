@@ -57,7 +57,7 @@ def get_urls(image_tag, max_count, download=True):
 
         # Grab the current image's flicker API data
         img_data = dict(photo.items())
-        pprint(img_data)
+        # pprint(img_data)
 
         if i < max_count:
             try:
@@ -71,17 +71,15 @@ def get_urls(image_tag, max_count, download=True):
                 # Add field for url we downloaded from
                 img_data['download_url'] = url
                 all_urls.append(url)
-                print(img_data)
 
                 # Update img info and succes rate
                 all_img_data.append(img_data)
                 succes_count += 1
-                print('%g/%g %s' % (i+1, max_count, url))
                 
             except:
                 print('%g/%g error...' % (i, max_count))
         else:
-            print("Done grabbing urls to download succces {} urls out of {}".format(succes_count, max_count))
+            print("Done grabbing Flirckr urls to download. Succces {} urls out of {}".format(succes_count, max_count))
             break
     
     
@@ -95,8 +93,10 @@ def get_urls(image_tag, max_count, download=True):
     # Save img data to disk as CSV
     df.to_csv(f"{data_dir}/img_data.csv")
 
-    print('Done with all. (%.1fs)' % (time.time() - t) + ('\nAll images saved to %s' % dir if download else ''))
+    print('Done with  scraping. (%.1fs)' % (time.time() - t) + ('\nAll images saved to %s' % img_downl_dir))
 
+    print(f"Done with Flickr scraping for tag '{image_tag}'. {round((time.time() - t),1)}")
+    print(f"All images saved to '{img_downl_dir}")
 
 
 def main(call_args):

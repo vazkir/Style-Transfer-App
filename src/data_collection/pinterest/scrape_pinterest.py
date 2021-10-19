@@ -2,10 +2,11 @@
 # Got idea from: https://towardsdatascience.com/how-to-use-flickr-api-to-collect-data-for-deep-learning-experiments-209b55a09628
 # Github repo: https://github.com/xjdeng/pinterest-image-scraper
 # Somebody who used api to download: https://github.com/ultralytics/flickr_scraper
-import time, os, random, pprint
-from .scraper import Pinterest_Helper, download
+import time, os
 import pandas as pd
 from dotenv import load_dotenv
+from .scraper import Pinterest_Helper
+from data_collection.download_imgs_pooled import download_imgs_threaded
 
 # Login credentials
 load_dotenv()
@@ -40,24 +41,21 @@ def get_images(pintr_url, tag, max_count, scroll_threshold = 500):
     for i in images:
         img_urls.append(i.decode())
 
-
     print("Done scrolling! Now let's start downloading...")
 
-    # Download them
-    download(img_urls, img_downl_dir)
-
-    # Dict to for pandas csv data info
-    info_dict = {'urls':img_urls}
-
+    print(img_urls)
+    # Download the actual images
+    download_results = download_imgs_threaded(img_urls, img_downl_dir)
 
     # Write source urls to disk
-    img_info_df = pd.DataFrame.from_dict(info_dict, orient='columns')
+    img_info_df = pd.DataFrame.from_dict(download_results, orient='columns')
     img_info_df['tag'] = tag
 
     img_csv_filename = f"{data_dir}/img_data.csv"
     img_info_df.to_csv(img_csv_filename)
 
-    print('Done. (%.1fs)' % (time.time() - t) + ('\nAll images saved to %s' % img_csv_filename))
+    print(f"Done with Pintest scraping for tag '{tag}'. {round((time.time() - t),1)}")
+    print(f"All images saved to '{img_downl_dir}")
 
 
 def main(call_args):
