@@ -32,6 +32,7 @@ dependencies:
     - pydot
     - selenium
     - webdriver-manager
+    - tensorflow_hub
     - tensorflow-estimator
     - tensorflow-macos
     - tensorflow-metal
