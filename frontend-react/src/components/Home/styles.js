@@ -29,7 +29,7 @@ const styles = theme => ({
         outline: "none",
         transition: "border .24s ease-in-out",
         cursor: "pointer",
-        backgroundImage: "url('https://storage.googleapis.com/public_colab_images/ai5/mushroom.svg')",
+        // backgroundImage: "url('https://storage.googleapis.com/public_colab_images/ai5/mushroom.svg')",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         minHeight: "400px",

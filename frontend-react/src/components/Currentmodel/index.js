@@ -42,20 +42,19 @@ const Currentmodel = (props) => {
                         Current Model Details
                     </Typography>
                     <Divider />
-                    {model &&
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableBody>
                                     <TableRow>
                                         <TableCell><Typography variant="h6">Name</Typography></TableCell>
-                                        <TableCell>{model.model_name}</TableCell>
+                                        <TableCell>{"pixel2style2pixel"}</TableCell>
                                     </TableRow>
 
                                     <TableRow>
                                         <TableCell><Typography variant="h6">Trainable Parameters</Typography></TableCell>
                                         <TableCell>
                                             <NumberFormat
-                                                value={model.trainable_parameters}
+                                                value={'110 Mil'}
                                                 displayType="text"
                                                 thousandSeparator={true}
                                             />
@@ -65,7 +64,7 @@ const Currentmodel = (props) => {
                                         <TableCell><Typography variant="h6">Training Time (mins)</Typography></TableCell>
                                         <TableCell>
                                             <NumberFormat
-                                                value={model.execution_time}
+                                                value={"57sec"}
                                                 displayType="text"
                                                 decimalSeparator="."
                                                 decimalScale={2}
@@ -76,7 +75,7 @@ const Currentmodel = (props) => {
                                         <TableCell><Typography variant="h6">Loss</Typography></TableCell>
                                         <TableCell>
                                             <NumberFormat
-                                                value={model.loss}
+                                                value={57}
                                                 displayType="text"
                                                 format="####"
                                             />
@@ -86,7 +85,7 @@ const Currentmodel = (props) => {
                                         <TableCell><Typography variant="h6">Accuracy</Typography></TableCell>
                                         <TableCell>
                                             <NumberFormat
-                                                value={model.accuracy * 100.00}
+                                                value={57}
                                                 displayType="text"
                                                 decimalSeparator="."
                                                 decimalScale={2}
@@ -99,7 +98,7 @@ const Currentmodel = (props) => {
                                         <TableCell><Typography variant="h6">Model Size (Mb)</Typography></TableCell>
                                         <TableCell>
                                             <NumberFormat
-                                                value={model.model_size / 1000000.00}
+                                                value={"1.2GB"}
                                                 displayType="text"
                                                 decimalSeparator="."
                                                 decimalScale={2}
@@ -110,31 +109,31 @@ const Currentmodel = (props) => {
                                     <TableRow>
                                         <TableCell><Typography variant="h6">Learning Rate</Typography></TableCell>
                                         <TableCell>
-                                            {model.learning_rate}
+                                            {"0.00005"}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell><Typography variant="h6">Batch Size</Typography></TableCell>
                                         <TableCell>
-                                            {model.batch_size}
+                                            {"32"}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell><Typography variant="h6">Epochs</Typography></TableCell>
                                         <TableCell>
-                                            {model.epochs}
+                                            {"10K"}
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell><Typography variant="h6">Optimizer</Typography></TableCell>
                                         <TableCell>
-                                            {model.optimizer}
+                                            {"Adam"}
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                    }
+                  
                 </Container>
             </main>
         </div>

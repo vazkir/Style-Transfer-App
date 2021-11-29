@@ -47,12 +47,12 @@ const Header = (props) => {
         <div className={classes.root}>
             <AppBar position="static" elevation={0}>
                 <Toolbar variant="dense">
-                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(true)}>
+                    {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(true)}>
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <Link to="/" className={classes.appLink}>
                         <Typography className={classes.appTitle} >
-                            🍄 Mushroom Identifier
+                        👶 Age Manipulator 👨‍🦳
                         </Typography>
                     </Link>
 
@@ -64,10 +64,10 @@ const Header = (props) => {
                             <Icon>home</Icon>
                             <Typography variant="caption">&nbsp;Home</Typography>
                         </IconButton>
-                        <IconButton color="inherit" component={Link} to="/leaderboard">
+                        {/* <IconButton color="inherit" component={Link} to="/leaderboard">
                             <Icon>leaderboard</Icon>
                             <Typography variant="caption">&nbsp;Leaderboard</Typography>
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton color="inherit" component={Link} to="/currentmodel">
                             <Icon>model_training</Icon>
                             <Typography variant="caption">&nbsp;Model</Typography>
@@ -79,7 +79,7 @@ const Header = (props) => {
                     </div>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
+            {/* <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
                 <div
                     tabIndex={0}
                     role="button"
@@ -109,7 +109,7 @@ const Header = (props) => {
                         </List>
                     </div>
                 </div>
-            </Drawer>
+            </Drawer> */}
         </div>
     );
 }
