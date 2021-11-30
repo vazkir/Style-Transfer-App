@@ -42,7 +42,12 @@ const Home = (props) => {
     return (
         <div className={classes.root}>
             <main className={classes.main}>
-                <Container maxWidth="md" className={classes.container}>
+            {/* <Container maxWidth="md" className={classes.container}>
+              <input className={classes.switchInput} type="checkbox" name="switch" id="switch"/>
+              <label className={classes.switchLabel} for="switch"></label>
+            </Container> */}
+
+                <Container maxWidth="md" className={classes.buttonContainer}>
                     {prediction &&
                         <Typography variant="h4" gutterBottom align='center'>
                             {!prediction.poisonous &&
