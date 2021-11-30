@@ -1,18 +1,24 @@
+import base64
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
 import asyncio
 # from api.tracker import TrackerService
 import pandas as pd
+import numpy as np
 import os
 from fastapi import File
 from tempfile import TemporaryDirectory
-from api import model
-from api.tracker import TrackerService
+from api.model import psp_inf
+
+# from api.tracker import TrackerService
+# 
+# 
+# # Initialize Tracker Service
+# tracker_service = TrackerService()
 
 
-# Initialize Tracker Service
-tracker_service = TrackerService()
-
+test_no_models = True
 
 # Setup FastAPI app
 app = FastAPI(
@@ -35,9 +41,8 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     # Startup tasks
-    # Start the tracker service
-    asyncio.create_task(tracker_service.track())
-    
+    if not test_no_models:
+        psp_inf.load_psp_models()
 
 
 # Routes
@@ -49,25 +54,43 @@ async def get_index():
 
 
 
-@app.post("/predict")
+@app.post("/match_latent")
 async def predict(
         file: bytes = File(...)
 ):
-    print("predict file:", len(file), type(file))
+    print("image file:", len(file), type(file))
 
     # Save the image
     with TemporaryDirectory() as image_dir:
-        image_path = os.path.join(image_dir, "test.png")
-        with open(image_path, "wb") as output:
+        image_path_input = os.path.join(image_dir, "input_img.png")
+        with open(image_path_input, "wb") as output:
             output.write(file)
 
-        # Make prediction
-        prediction_results = model.make_prediction(image_path)
 
-    return prediction_results
+        if not test_no_models:
+            # Make prediction
+            matched_img, matched_latent = psp_inf.get_latent_match_and_img_repr(image_path_input)
+        
 
+            # Save generate image to tempdir
+            image_path_latent = os.path.join(image_dir, "latent_match_img.png")
+            matched_img.save(image_path_latent)
+            
+        else:
+            image_path_latent = image_path_input
+            matched_latent = np.ndarray(shape=(1, 18, 512))
+        
+        # Read image to encoded bytes for response
+        with open(image_path_latent, "rb") as image_file:
+            encoded_image_string = base64.b64encode(image_file.read())
 
-
+        payload = {
+            "mime" : "image/png",
+            "image": encoded_image_string,
+            "matched_latent": matched_latent.tolist()
+        }
+        
+        return payload
 
 
 

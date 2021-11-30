@@ -44,7 +44,7 @@ RUN set -ex; \
 
 
 # Expose port
-EXPOSE 9001
+EXPOSE 9000
 
 # Switch to the new user
 USER app
