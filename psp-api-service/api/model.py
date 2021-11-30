@@ -118,6 +118,7 @@ class PSPInference:
 
     def match_latent_space_img(self, img_path):
 
+        print("Starting matching image to latent representation...")
         # Image to run before conversion
         img_tf = self.load_preprocess_image_from_path(img_path)
         
@@ -127,7 +128,7 @@ class PSPInference:
                                                           randomize_noise=False, 
                                                           return_latents= True)
         toc = time.time()
-        print('Inference took {:.4f} seconds.'.format(toc - tic))
+        print('Matching image to latent representation took {:.4f} seconds.'.format(toc - tic))
         
         self.current_latent_vec = result_latent_vec
         self.current_img_vec = result_img_vec
@@ -142,7 +143,7 @@ class PSPInference:
         img_arr = self.tensor2img(self.current_img_vec[0])
         
         # Formats image vec to actual image
-        return self.current_latent_vec, Image.fromarray(img_arr)
+        return Image.fromarray(img_arr), self.current_latent_vec 
         
         
 psp_inf = PSPInference()       

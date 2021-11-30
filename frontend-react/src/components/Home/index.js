@@ -15,7 +15,8 @@ const Home = (props) => {
 
     // Component States
     const [image, setImage] = useState(null);
-    const [prediction, setPrediction] = useState(null);
+    const [matchedImgUri, setMatchedImgUri] = useState(null);
+    const [latentMask, setLatentMask] = useState(null);
 
     // Setup Component
     useEffect(() => {
@@ -26,6 +27,15 @@ const Home = (props) => {
     const handleImageUploadClick = () => {
         inputFile.current.click();
     }
+
+    const setMatchedResponse = (data) => {
+      const matches = data
+
+      // Update our state
+      setMatchedImgUri(`data:image/png;base64, ${matches.matched_img}`)
+      setLatentMask(matches.matched_latent)
+    }
+
     const handleOnChange = (event) => {
         console.log(event.target.files);
         setImage(URL.createObjectURL(event.target.files[0]));
@@ -35,7 +45,7 @@ const Home = (props) => {
         DataService.GetLatentMatch(formData)
             .then(function (response) {
                 console.log(response.data);
-                setPrediction(response.data);
+                setMatchedResponse(response.data);
             })
     }
 
@@ -48,16 +58,6 @@ const Home = (props) => {
             </Container> */}
 
                 <Container maxWidth="md" className={classes.buttonContainer}>
-                    {prediction &&
-                        <Typography variant="h4" gutterBottom align='center'>
-                            {!prediction.poisonous &&
-                                <span className={classes.safe}>{prediction.prediction_label + " (" + prediction["accuracy"] + "%)"}</span>
-                            }
-                            {prediction.poisonous &&
-                                <span className={classes.poisonous}>{prediction.prediction_label + " (" + prediction["accuracy"] + "%)"}&nbsp;&nbsp;Poisonous</span>
-                            }
-                        </Typography>
-                    }
                     <div className={classes.dropzone} onClick={() => handleImageUploadClick()}>
                         <input
                             type="file"
@@ -73,6 +73,8 @@ const Home = (props) => {
                         <div><img className={classes.preview} src={image} /></div>
                         <div className={classes.help}>Click to take a picture or upload...</div>
                     </div>
+                    <h2>Matched image</h2>
+                    <div><img className={classes.preview} src={matchedImgUri} /></div>
                 </Container>
             </main>
         </div>
