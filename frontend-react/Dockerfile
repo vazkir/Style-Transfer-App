@@ -7,6 +7,7 @@ ENV PUBLIC_URL /
 COPY package.json ./
 COPY yarn.lock ./
 RUN yarn install
+RUN yarn config set ignore-engines true
 
 COPY . ./
 RUN yarn run build
