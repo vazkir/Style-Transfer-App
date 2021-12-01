@@ -13,6 +13,7 @@ from PIL import Image
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 local_experiments_path = "/persistent/experiments"
 local_models_path = "/persistent/models"
+local_directions_path = "/persistent/stylegan2directions"
 best_model = None
 best_model_id = None
 prediction_model = None
@@ -50,16 +51,37 @@ class PSPInference:
         self.timestamp = 0
         self.psp_model = None
         self.decoder_model = None
+        self.latent_directions_dict = {}
         self.current_img_vec = None
         self.current_latent_vec = None
+        self.mutated_latent_vec = None
+        self.mutated_img_vec = None
+        self.latent_directions = [
+            "age",
+            "eye_distance",
+            "eye_eyebrow_distance",
+            "eye_ratio",
+            "gender",
+            "lip_ratio",
+            "mouth_open",
+            "nose_mouth_distance",
+            "nose_ratio",
+            "nose_tip",
+            "pitch",
+            "roll",
+            "smile",
+            "yaw"
+        ]
+        
 
     # Make it async so rest of the startup isn't blocked
     # async def load_psp_models(self):
-    def load_psp_models(self):
+    def load_psp_models(self, only_decoder=False):
         print("Start our api service, now loading models into memory.....")
-        
-        if self.psp_model is None: 
-            self.psp_model = get_onnx_tf_model('mnist')
+        tic = time.time()
+
+        if self.psp_model is None and only_decoder == False: 
+            self.psp_model = get_onnx_tf_model('psp')
         else:
             print("Psp model was already loaded")
             
@@ -68,8 +90,26 @@ class PSPInference:
         else:
             print("Decoder model was already loaded")  
         
-        print("Done loading models into memory, ready for action :) :)")
+        toc = time.time()
+        print("Loading models into memory took {:.4f} seconds.".format(toc - tic))
                 
+
+    def load_latent_direction_vectors(self):
+        
+        print("Loading StyleGan2 direction vectors into memory.....")
+        tic = time.time()
+
+        if len(self.latent_directions_dict) < 1:
+                
+            for latetent_dir in self.latent_directions: 
+                direction_arr = np.load(f"{local_directions_path}/{latetent_dir}.npy")
+                self.latent_directions_dict[latetent_dir] = direction_arr
+        
+
+        toc = time.time()
+        print("Loading StyleGan2 direction vectors took {:.4f} seconds.".format(toc - tic))
+
+
 
     # https://stackoverflow.com/questions/67480507/tensorflow-equivalent-of-pytorchs-transforms-normalize
     def normalize_image_pytorch_style(self, image, mean, std):
@@ -144,6 +184,57 @@ class PSPInference:
         
         # Formats image vec to actual image
         return Image.fromarray(img_arr), self.current_latent_vec 
+        
+        
+    def mutate_latent(self, input_latent, change_degrees_dict):
+        # If nothing need to be changed we will return the input latent as is
+        multiple_latent = input_latent
+
+        for feat_name, lat_feat_vector in self.latent_directions_dict.items():
+
+            # Get the degree (int) of the amount we want this feature to be changed
+            feat_change_degree = change_degrees_dict[f"{feat_name}_degree"]
+
+            # 0 means nothing has been changed for this vector in terms of degree
+            # So we can skip this specific manipulation
+            if feat_change_degree == 0:
+                # print("Nope", feat_name)
+                continue
+
+            # Update the latent with the right feature axis to change in the degree specified
+            multiple_latent += (lat_feat_vector * feat_change_degree)
+
+        return multiple_latent      
+        
+    def mutate_latent_img(self, input_latent, change_degrees):
+        print("Starting changing image by latent manipulation...")
+        tic = time.time()
+
+        new_latent_vec = self.mutate_latent(input_latent, change_degrees)
+        
+        # Decode our updated latent to an actual image representation
+        new_img = self.decoder_model.run([new_latent_vec],
+                                            input_is_latent=True,
+                                            randomize_noise=False,
+                                            return_latents=False)[0]
+        
+        toc = time.time()
+        print('Changing image by latent manipulation {:.4f} seconds.'.format(toc - tic))
+        
+        self.mutated_latent_vec = new_latent_vec
+        self.mutated_img_vec = new_img
+        
+        
+    def get_mutated_latent(self, input_latent, change_degrees):
+        # Runs the StyleGan2 decoder with a new latent based on input
+        # and get the image and latent of the new image 
+        self.mutate_latent_img(input_latent, change_degrees)
+        
+        # Reverts all preprocessing on resulting image to get to normal format
+        img_arr = self.tensor2img(self.mutated_img_vec[0])
+        
+        # Formats image vec to actual image
+        return Image.fromarray(img_arr), self.mutated_latent_vec 
         
         
 psp_inf = PSPInference()       

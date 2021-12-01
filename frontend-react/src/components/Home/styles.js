@@ -55,12 +55,13 @@ const styles = theme => ({
         // backgroundImage: "url('https://storage.googleapis.com/public_colab_images/ai5/mushroom.svg')",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        minHeight: "400px",
+        // minHeight: "400px",
     },
     fileInput: {
         display: "none",
     },
     preview: {
+        maxHeight:"30vh",
         width: "100%",
     },
     help: {
