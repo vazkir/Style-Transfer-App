@@ -20,7 +20,7 @@ const Footer = (props) => {
     return (
         <div className={classes.root}>
             <Typography align='center'>
-                Style Transfer App
+                Style Transfer
             </Typography>
 
         </div>
