@@ -58,6 +58,16 @@ We are also planning to get this functionality (besides changing the image in th
 ![image description](frontend-screenshot.png)
 
 
+
+## A screenshot of our Kuberneters cluster
+
+
+![image description](k8_cluster.png)
+
+
+
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
