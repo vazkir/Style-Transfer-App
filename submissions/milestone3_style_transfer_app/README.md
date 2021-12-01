@@ -5,7 +5,7 @@ Harvard AC215
 
 ## Notebooks used
 
-Inside the notebooks folder you can find the PSP folder which contains the notebooks we used in colab to:
+Inside [the notebooks](https://github.com/vazkir/Style-Transfer-App/tree/main/notebooks/psp) folder you can find the PSP folder which contains the notebooks we used in colab to:
 - Run the original pytorch models
 - Convert the pytoch models to ONNX format
 - Run the onnx_tf models as tensorflow models
@@ -18,7 +18,7 @@ If you want to actually run the notebooks, then please let use know so we can gi
 
 ## PSP API Service
 
-[This folder](https://github.com/vazkir/Style-Transfer-App/tree/main/notebooks/psp) contains the api we created that can do the following:
+[This folder](https://github.com/vazkir/Style-Transfer-App/tree/main/psp-api-service) contains the api we created that can do the following:
 1) Load onnx_tf models into memory
 2) Receive an input image as request which is then converted by our first model called 'psp.onnx' to a latent representation of the image which is returned
 3) Receive a latent vector which is then mutated to aplpy an age vector. This mutated vector is then used as input and then run through our second "decoder.onnx" model to generate an image with this mutatation
@@ -27,7 +27,7 @@ If you want to actually run the notebooks, then please let use know so we can gi
 
 ## React Frontend
 
-This contains all our frontend code which leverages the api when an image gets uploaded. Then it gets a latent matched image back from the API. From which the user can then choose to apply an age vector to, to make the current image of a person look older
+[This contains](https://github.com/vazkir/Style-Transfer-App/tree/main/frontend-react) all our frontend code which leverages the api when an image gets uploaded. Then it gets a latent matched image back from the API. From which the user can then choose to apply an age vector to, to make the current image of a person look older
 
 
 
