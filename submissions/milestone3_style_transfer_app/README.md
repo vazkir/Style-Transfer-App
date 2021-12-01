@@ -61,7 +61,7 @@ We are also planning to get this functionality (besides changing the image in th
 
 ## A screenshot of our Kuberneters cluster
 
-
+![image description](k8_cluster2.png)
 ![image description](k8_cluster.png)
 
 
