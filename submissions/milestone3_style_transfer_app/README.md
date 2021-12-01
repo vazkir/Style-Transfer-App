@@ -52,6 +52,10 @@ We are also planning to get this functionality (besides changing the image in th
 
 
 
+## A screenshot of our application running
+
+
+![image description](frontend-screenshot.png)
 
 
 ## Contributing
