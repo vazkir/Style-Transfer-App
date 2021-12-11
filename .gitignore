@@ -6,6 +6,9 @@
 persistent-folder
 secrets
 
+# Large cpth/weight files
+models/psp/weights
+
 data/**/**/*.*
 # !data/**/*.csv
 !data/**/**/*.csv
