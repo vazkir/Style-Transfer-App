@@ -15,6 +15,9 @@ onnxruntime = "==1.7.0"
 scipy = "==1.2.1"
 Pillow = "==8.3.1"
 ipykernel = "*"
+onnx-tf = "*"
+ipython = "*"
+jupyter = "*"
 
 [dev-packages]
 

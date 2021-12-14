@@ -4,7 +4,7 @@ from torch import nn
 from torch.nn import functional as F
 import random
 
-from stylegan2.op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d, conv2d_gradfix
+from models.psp_project.stylegan2.op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d, conv2d_gradfix
 
 
 class PixelNorm(nn.Module):
