@@ -31,7 +31,12 @@ decoder_model = None
 if RUN_LOCAL:
     # Pyenv root is inside this folder
     path_persis_exper =  "../../persistent-folder/experiments"
+    path_persis_models = "../../persistent-folder/models"
+    path_persis_directions = "../../persistent-folder/stylegan2directions"
+    
     local_experiments_path = os.path.join(os.path.dirname(__file__),path_persis_exper)
+    local_models_path = os.path.join(os.path.dirname(__file__),path_persis_models)
+    local_directions_path = os.path.join(os.path.dirname(__file__),path_persis_directions)
 
 
 def get_onnx_tf_model(model_name):
@@ -42,6 +47,8 @@ def get_onnx_tf_model(model_name):
     
     # Convert the onnx model to tensorflow
     tf_rep = prepare(model)
+    
+    
 
     toc = time.time()
     print(f"Loading and converting '{model_name}' onnx to tf took {round(toc - tic, 2)} seconds.")

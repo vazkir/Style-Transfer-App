@@ -6,6 +6,8 @@
 persistent-folder
 secrets
 
+custom_psp
+
 # Large cpth/weight files
 models/psp_project/weights
 

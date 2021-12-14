@@ -52,7 +52,7 @@ const Header = (props) => {
                     </IconButton> */}
                     <Link to="/" className={classes.appLink}>
                         <Typography className={classes.appTitle} >
-                        👶 Age Manipulator 👨‍🦳
+                        Style Transfer App
                         </Typography>
                     </Link>
 

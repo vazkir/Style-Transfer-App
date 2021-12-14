@@ -1,128 +1,117 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { withStyles } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import styled from 'styled-components'
+import { Link } from 'react-router-dom';
 
-import DataService from "../../services/DataService";
-import styles from './styles';
+import styled from 'styled-components'
+import {
+  CardWrapper,
+  CardHeader,
+  CardHeading,
+  CardBody,
+  CardIcon,
+  CardFieldset,
+  CardInput,
+  CardOptionsItem,
+  CardOptions,
+  CardOptionsNote,
+  CardButton,
+  CardLink
+} from "./Card";
 
 const Home = (props) => {
-    const { classes } = props;
 
     console.log("================================== Home ======================================");
 
-    const inputFile = useRef(null);
-
-    // Component States
-    const [image, setImage] = useState(null);
-    const [imgID, setImgID] = useState(null);
-    const [matchedImgUriInput, setMatchedImgUriInput] = useState(null);
-    const [matchedImgUriOuput, setMatchedImgUriOuput] = useState(null);
-
-    const [latentMask, setLatentMask] = useState(null);
-
-    // Setup Component
-    useEffect(() => {
-
-    }, []);
-
-    // Handlers
-    const handleImageUploadClick = () => {
-        inputFile.current.click();
-    }
-
-    const setMatchedResponse = (data) => {
-      const matches = data
-
-      // Update our state
-      setMatchedImgUriInput(`data:image/png;base64, ${matches.matched_img}`)
-      // setLatentMask(matches.matched_latent)
-      setImgID(matches.latent_id)
-    }
 
 
-    const setChangedLatentResponse = (data) => {
-      const matches = data
-
-      // Update our state
-      setMatchedImgUriOuput(`data:image/png;base64, ${matches.changed_img}`)
-    }
 
 
-    const handleUploadImg = (event) => {
-        console.log(event.target.files);
-        setImage(URL.createObjectURL(event.target.files[0]));
-
-        var formData = new FormData();
-        formData.append("file", event.target.files[0]);
-        DataService.GetLatentMatch(formData)
-            .then(function (response) {
-                console.log(response.data);
-                setMatchedResponse(response.data);
-            })
-    }
-
-
-    const handleMutateImg = (event) => {
-      console.log(event.target.files);
-
-
-      var formData = new FormData();
-      formData.append("latent_id", imgID);
-      DataService.GetMutatedLatentImg(formData)
-          .then(function (response) {
-              console.log(response.data);
-              setChangedLatentResponse(response.data);
-          })
-    }
 
     return (
-        <div className={classes.root}>
+//       <MainContainer>
+//         <MainTitle>Welcome to the Style Transfer App</MainTitle>
+//         <DescrContainer>With this app you can change images you upload. </DescrContainer>
+// 
+// 
+//       </MainContainer>
+      <CardWrapper>
+        <CardHeader>
+          <CardHeading>Welcome to the Style Transfer App</CardHeading>
+        </CardHeader>
 
-        <UploadContainer>
-          
-            <Container maxWidth="md" className={classes.buttonContainer}>
-              <Subtitle>Matched image</Subtitle>
+        <CardBody>
+        <DescrContainer>With this app you can change images you upload. </DescrContainer>
 
-                <div className={classes.dropzone} onClick={() => handleImageUploadClick()}>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        capture="camera"
-                        on
-                        autocomplete="off"
-                        tabindex="-1"
-                        className={classes.fileInput}
-                        ref={inputFile}
-                        onChange={(event) => handleUploadImg(event)}
-                    />
-                    <div><img className={classes.preview} src={image} /></div>
-                    <div className={classes.help}>Click to take a picture or upload...</div>
-                </div>
-            </Container>
-        </UploadContainer>
-        <ModelContainer>
-          <Subtitle>Changing the image</Subtitle>
-          <FlexContainer>
-            <InputLatentContainer>
-              <div><img className={classes.preview} src={matchedImgUriInput} /></div>
-            </InputLatentContainer>
-            <SwitchContainer>
-              <button onClick={(event) => handleMutateImg(event)}>Make person older</button>
-            </SwitchContainer>
-            <OutputLatentContainer>
-              <div><img className={classes.preview} src={matchedImgUriOuput} /></div>
-            </OutputLatentContainer>
-          </FlexContainer>
 
-        </ModelContainer>
-      </div>
+          <CardFieldset>
 
+            <CardOptions>
+              <CardOptionsItem>
+                <CardIcon className="fab fa-google" big />
+              </CardOptionsItem>
+
+              <CardOptionsItem>
+                <CardIcon className="fab fa-twitter" big />
+              </CardOptionsItem>
+
+              <CardOptionsItem>
+                <CardIcon className="fab fa-facebook" big />
+              </CardOptionsItem>
+            </CardOptions>
+          </CardFieldset>
+
+          <CardFieldset>
+            <Link style={{ textDecoration: 'none' }} to="/laten_manipulate" >
+
+              <CardButton type="button">Latent Manipulation</CardButton>
+            </Link>
+          </CardFieldset>
+
+          <CardFieldset>
+            <Link style={{ textDecoration: 'none' }} to="/style_transfer" >
+
+              <CardButton  type="button" disabled={false}>Style Transfer</CardButton>
+            </Link>
+
+          </CardFieldset>
+        </CardBody>
+      </CardWrapper>
     );
 };
 
-export default withStyles(styles)(Home);
+export default Home;
+
+
+
+const MainContainer = styled.div`
+  margin: "auto";
+  width: "60%";
+  padding: "10px";
+`
+
+
+const MainTitle = styled.h1`
+  text-align: center;
+
+`
+const DescrContainer = styled.div`
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+  & + & {
+    margin-top: 24px;
+  }
+
+  &:nth-last-of-type(2) {
+    margin-top: 32px;
+  }
+
+  &:last-of-type {
+    text-align: center;
+  }
+`
+
 
 
 
