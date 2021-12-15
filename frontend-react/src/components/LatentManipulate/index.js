@@ -229,7 +229,7 @@ const LatentManipulate = (props) => {
               {matchedImgUriInput == null
                 ? 
                 <DropZone onClick={() => handleImageUploadClick()}>
-                  <FileInput
+                  <input
                       type="file"
                       accept="image/*"
                       capture="camera"

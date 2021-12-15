@@ -21,6 +21,14 @@ const DataService = {
         });
     },
 
+    ApplyST: async function (formData, style) {
+        return await axios.post(BASE_API_URL + "/apply_st?style=" + style, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    },
+
     GetMutatedLatentImg: async function (formData) {
       return await axios.post(BASE_API_URL + "/mutate_latent", formData, {
           // headers: {

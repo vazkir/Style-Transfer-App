@@ -23,6 +23,8 @@ pillow = "*"
 # tensorflow-estimator = "==2.6.0"
 tensorflow-addons = {path = "./tensorflow_addons-0.14.0.dev0-cp39-cp39-macosx_11_0_arm64.whl"}
 # keras = "==2.6.0"
+ipykernel = "*"
+opencv-python = "*"
 
 [pipenv]
 allow_prereleases = true
