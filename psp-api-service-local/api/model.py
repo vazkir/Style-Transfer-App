@@ -48,7 +48,6 @@ def get_onnx_tf_model(model_name):
     # Convert the onnx model to tensorflow
     tf_rep = prepare(model)
     
-    
 
     toc = time.time()
     print(f"Loading and converting '{model_name}' onnx to tf took {round(toc - tic, 2)} seconds.")

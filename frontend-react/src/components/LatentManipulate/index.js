@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, setState } from 'react';
 import { withStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -44,22 +44,35 @@ const LatentManipulate = (props) => {
     const sliderIndicatorText = "You can now use the sliders to change the matched latent img"
 
 
-    const latentNames = [
-      'Age',
-      'Gender',
-      'Bla bla',
-      'Something',
-      'Anothat one'
+    const defaultLatentValues = [
+      {"name": "age", "value": 5},
+      {"name": "eye_distance", "value": 5},
+      // "eye_eyebrow_distance",
+      {"name": "eye_ratio", "value": 5},
+      {"name": "gender", "value": 5},
+      {"name": "lip_ratio", "value": 5},
+      {"name": "mouth_open", "value": 5},
+      // "nose_mouth_distance",
+      {"name": "nose_ratio","value": 5},
+      // "nose_tip",
+      // "pitch",
+      // "roll",
+      {"name": "smile", "value": 5},
+      // "yaw"
     ]
 
     // Component States
+    
+    const listState = useState( [] );
+    const [latentItems, setLatentItems] = useState(defaultLatentValues);
+
     const [indicator, setIndicator] = useState(defaultIndicatorText);
     const inputRef = useRef(null);
     // const [setInputImage, inputImage] = useState(null);
 
 
     const [inputImage, setInputImage] = useState(null);
-    const [imgID, setImgID] = useState(null);
+    const [imgID, setImgID] = useState("1");
     const [matchedImgUriInput, setMatchedImgUriInput] = useState(null);
     const [matchedImgUriOuput, setMatchedImgUriOuput] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -95,25 +108,44 @@ const LatentManipulate = (props) => {
 
     const setMatchedResponse = (data) => {
       const matches = data
-
+      console.log(matches)
       // Update our state
       setMatchedImgUriInput(`data:image/png;base64, ${matches.matched_img}`)
       // setLatentMask(matches.matched_latent)
-      setImgID(matches.latent_id)
+      setImgID(matches.start_files_id)
 
       setIndicator(`Done matching: ${sliderIndicatorText}`)
       setIsLoading(false)
     }
 
 
+    const scale = (number, inMin, inMax, outMin, outMax) => {
+      return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
+
+
+
     const handleMutateImg = (event) => {
       console.log(event.target.files);
       setIndicator("Updating latent space based on slider......")
       setIsLoading(true)
+      
 
-      var formData = new FormData();
-      formData.append("latent_id", imgID);
-      DataService.GetMutatedLatentImg(formData)
+      const newLatentItems = JSON.parse(JSON.stringify(latentItems));
+
+      newLatentItems.map((latent, index) => {
+        // console.log(latent)
+        // console.log(latentName)
+        latent.value = scale(latent.value , 0, 10, -1, 1)
+      })
+
+      const dataSend = {
+        latent_id: imgID,
+        values: newLatentItems
+      }
+      console.log(dataSend);
+
+      DataService.GetMutatedLatentImg(dataSend)
           .then(function (response) {
               console.log(response.data);
               setChangedLatentResponse(response.data);
@@ -139,6 +171,7 @@ const LatentManipulate = (props) => {
       setMatchedImgUriInput(null);
       setMatchedImgUriOuput(null);
       setIsLoading(false)
+      setLatentItems(defaultLatentValues)
       // inputImage.current.value = null;
 
       // TODO: Set sliders to default!
@@ -155,6 +188,31 @@ const LatentManipulate = (props) => {
         overflow: hidden;
       }
     `;
+
+    // useEffect(() => {
+    //   console.log(latentItems);
+    // }, [latentItems]);
+
+    const handleSliderChange = (e, value, latentName) => {
+      console.log(latentName)
+      console.log(value)
+      // const latentName = e.target.id
+      // const copyOfObject = { ...quizAnswers }
+      const newLatentItems = latentItems;
+
+      newLatentItems.map((latent, index) => {
+        // console.log(latent)
+        // console.log(latentName)
+
+        if(latent.name === latentName){
+          newLatentItems[index].value = value;    
+        }
+      })
+
+      setLatentItems([...newLatentItems])
+      console.log(latentItems)
+
+    }
 
     return (
         <MainContainer>
@@ -190,14 +248,21 @@ const LatentManipulate = (props) => {
               </ImgUploadDeck>
               <SliderDeck>
                 <SlidersContainer>
-                  {latentNames.map((row, index) => (
+                  <Typography id="label">Slider label</Typography>
+                  {latentItems.map((latent, index) => (
                     <SlideWrapper key={index}>
-                      <SliderTitle>{row}</SliderTitle>
+                      <SliderTitle>{latent.name}</SliderTitle>
                       <Slider
-                        aria-label="Age"
-                        defaultValue={5}
-                        getAriaValueText={valuetext}
-                        valueLabelDisplay="auto"
+                        aria-label={latent.name}
+                        // defaultValue={5}
+                        // getAriaValueText={valuetext}
+                        // onChange={handleSliderChange}
+                        onChangeCommitted={(e, val) => handleSliderChange(e, val, latent.name)}
+                        // valueLabelDisplay="auto"
+                        id={latent.name}
+                        // key={index}
+                        key={`slider-${index}`} /* fixed issue */
+                        value={latent.value}
                         step={1}
                         marks
                         min={0}

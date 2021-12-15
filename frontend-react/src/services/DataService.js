@@ -23,9 +23,9 @@ const DataService = {
 
     GetMutatedLatentImg: async function (formData) {
       return await axios.post(BASE_API_URL + "/mutate_latent", formData, {
-          headers: {
-              'Content-Type': 'multipart/form-data'
-          }
+          // headers: {
+          //     'Content-Type': 'multipart/form-data'
+          // }
       });
   },
     
