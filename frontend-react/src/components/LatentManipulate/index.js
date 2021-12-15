@@ -95,7 +95,7 @@ const LatentManipulate = (props) => {
 
         var formData = new FormData();
         formData.append("file", event.target.files[0]);
-        setIndicator("Matchinhg input image.....")
+        setIndicator("Matching input image.....")
         setIsLoading(true)
 
         DataService.GetLatentMatch(formData)
@@ -248,7 +248,6 @@ const LatentManipulate = (props) => {
               </ImgUploadDeck>
               <SliderDeck>
                 <SlidersContainer>
-                  <Typography id="label">Slider label</Typography>
                   {latentItems.map((latent, index) => (
                     <SlideWrapper key={index}>
                       <SliderTitle>{latent.name}</SliderTitle>
