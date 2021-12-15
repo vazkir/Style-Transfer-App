@@ -94,7 +94,7 @@ class PSPInference:
         tic = time.time()
 
         if self.psp_model is None and only_decoder == False: 
-            self.psp_model = get_onnx_tf_model('psp_clean_ops12')
+            self.psp_model = get_onnx_tf_model('psp')
         else:
             print("Psp model was already loaded")
             
