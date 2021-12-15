@@ -1,1 +1,0 @@
-RUN_LOCAL = True

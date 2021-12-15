@@ -1,4 +1,5 @@
 import os, time
+import cv2
 import json
 import numpy as np
 import onnx
@@ -17,6 +18,8 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 local_experiments_path = "/persistent/experiments"
 local_models_path = "/persistent/models"
 local_directions_path = "/persistent/stylegan2directions"
+local_st_models_path = "/persistent/st_models"
+
 best_model = None
 best_model_id = None
 prediction_model = None
@@ -32,15 +35,85 @@ feature_ranges = {'age_range': 10, 'eye_distance_range': 50, 'eye_eyebrow_distan
                 'gender_range': 10, 'lip_ratio_range': 30, 'mouth_open_range':80, 'nose_mouth_distance_range': 50,
                 'nose_ratio_range': 30, 'nose_tip_range': 50, 'pitch_range': 10, 'roll_range': 30, 'smile_range': 5, 'yaw_range': 10}
 
+
+STYLES = {
+    "candy": "candy",
+    "composition 6": "composition_vii",
+    "feathers": "feathers",
+    "la_muse": "la_muse",
+    "mosaic": "mosaic",
+    "starry night": "starry_night",
+    "the scream": "the_scream",
+    "the wave": "the_wave",
+    "udnie": "udnie",
+}
+
 if RUN_LOCAL:
     # Pyenv root is inside this folder
     path_persis_exper =  "../../persistent-folder/experiments"
     path_persis_models = "../../persistent-folder/models"
     path_persis_directions = "../../persistent-folder/stylegan2directions"
-    
+    path_peris_st_model = "../../persistent-folder/st_models"
     local_experiments_path = os.path.join(os.path.dirname(__file__),path_persis_exper)
     local_models_path = os.path.join(os.path.dirname(__file__),path_persis_models)
     local_directions_path = os.path.join(os.path.dirname(__file__),path_persis_directions)
+    local_st_models_path = os.path.join(os.path.dirname(__file__),path_peris_st_model)
+
+
+
+
+def inference_st(style, img_path):
+    image = np.array(Image.open(img_path))
+    model = STYLES[style]
+    
+    model_name = f"{local_st_models_path}/{model}.t7"
+    print(model_name)
+    model = cv2.dnn.readNetFromTorch(model_name)
+
+    height, width = int(image.shape[0]), int(image.shape[1])
+    new_width = int((640 / height) * width)
+    resized_image = cv2.resize(image, (new_width, 640), interpolation=cv2.INTER_AREA)
+
+    # Create our blob from the image
+    # Then perform a forward pass run of the network
+    # The Mean values for the ImageNet training set are R=103.93, G=116.77, B=123.68
+
+    inp_blob = cv2.dnn.blobFromImage(
+        resized_image,
+        1.0,
+        (new_width, 640),
+        (103.93, 116.77, 123.68),
+        swapRB=False,
+        crop=False,
+    )
+
+    model.setInput(inp_blob)
+    output = model.forward()
+
+    print("Inference done biatch")
+    # Reshape the output Tensor,
+    # add back the mean substruction,
+    # re-order the channels
+    output = output.reshape(3, output.shape[2], output.shape[3])
+    output[0] += 103.93
+    output[1] += 116.77
+    output[2] += 123.68
+
+    output = output.transpose(1, 2, 0)
+    return output, resized_image
+
+
+
+# img_path = 'data/portraits/dongyun.jpg'
+# style = 'mosaic'
+# 
+# image = np.array(Image.open(img_path))
+# model = STYLES[style]
+# 
+# output, resized = inference(model, image)
+# name = f"./persistent-folder/st_models/test.jpg"
+# cv2.imwrite(name, output)
+
 
 
 def get_onnx_tf_model(model_name):
@@ -94,7 +167,7 @@ class PSPInference:
         tic = time.time()
 
         if self.psp_model is None and only_decoder == False: 
-            self.psp_model = get_onnx_tf_model('psp')
+            self.psp_model = get_onnx_tf_model('psp_clean_ops12')
         else:
             print("Psp model was already loaded")
             

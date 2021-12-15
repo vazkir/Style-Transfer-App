@@ -10,8 +10,9 @@ import numpy as np
 import os
 from fastapi import File
 from tempfile import TemporaryDirectory
-from api.model import psp_inf
+from api.model import psp_inf, inference_st
 from api.local import RUN_LOCAL
+import cv2
 
 # from api.tracker import TrackerService
 # 
@@ -20,17 +21,25 @@ from api.local import RUN_LOCAL
 # tracker_service = TrackerService()
 
 local_psp_path = "/persistent/psp"
+local_st_path = "/persistent/st_imgs"
 
 
 if RUN_LOCAL:
     # Pyenv root is inside this folder
     path_psp_exper =  "../../persistent-folder/psp"
+    path_st_exper =  "../../persistent-folder/psp"
+
     local_psp_path = os.path.join(os.path.dirname(__file__),path_psp_exper)
-    
+    local_st_path = os.path.join(os.path.dirname(__file__),path_psp_exper)
+
 
 
 local_psp_inputs_path = f"{local_psp_path}/inputs"
+local_st_inputs_path = f"{local_psp_path}/inputs"
+
 local_psp_outputs_path = f"{local_psp_path}/outputs"
+local_st_outputs_path = f"{local_psp_path}/outputs"
+
 
 test_no_models = False
 save_persistent = True
@@ -68,6 +77,11 @@ async def get_index():
     return {
         "message": "Welcome to the API Service"
     }
+
+
+
+
+
 
 
 def run_latent_match(input_img, file_dir):
@@ -124,6 +138,9 @@ def run_latent_manipulate(latent_id, inp_latent_path, change_dir_dict):
         encoded_image_string = base64.b64encode(image_file.read())
         
     return encoded_image_string, changed_latent
+
+
+
 
 
 from typing import List
@@ -211,6 +228,60 @@ async def match_latent(
     }
     
 
+
+
+
+
+def run_st_img(input_img, file_dir, style):
+    start_files_id = datetime.now().strftime('%d-%m-%Y_%H-%M')
+    
+    image_path_input = os.path.join(file_dir, f"{start_files_id}_img.png")
+    
+    with open(image_path_input, "wb") as output:
+        output.write(input_img)
+
+    # Make prediction
+    output, resized_image = inference_st(style, image_path_input)
+    ouput_img_path = os.path.join(local_st_outputs_path, f"{start_files_id}_st_{style}_img.png")
+
+    # Save generate image and latent to disk
+    cv2.imwrite(ouput_img_path, output)
+
+    # Read image to encoded bytes for response
+    with open(ouput_img_path, "rb") as image_file:
+        encoded_image_string = base64.b64encode(image_file.read())
+        
+    return encoded_image_string, start_files_id
+
+
+
+
+
+@app.post("/apply_st")
+async def apply_st(
+        file: bytes = File(...),
+        style: str = "mosaic"
+):
+    print("image file:", len(file), type(file))
+    
+    # style = "mosaic"
+    print(style)
+
+    # Save the image
+    if save_persistent:        
+        encoded_image_string, start_files_id = run_st_img(file, local_st_inputs_path, style)
+    else:
+        with TemporaryDirectory() as image_dir:
+            encoded_image_string, start_files_id = run_st_img(file, image_dir, style)
+
+    # Yields the image itself along with the matched latent variable
+    return {
+        "mime" : "image/png",
+        "matched_img": encoded_image_string,
+        "start_files_id":start_files_id,
+        # "matched_latent": matched_latent.tolist()
+    }
+    
 
 
 # @app.get("/leaderboard")
