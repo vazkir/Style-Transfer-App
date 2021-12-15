@@ -37,7 +37,13 @@ If you want to actually run the notebooks, then please let use know so we can gi
 
 
 
-## Room for improvement
+## The Application
+
+![image description](main_screen.png)
+
+On home screen, the user can choose between 1 of our 2 main functionalities:
+- Latent Manipulation
+- Style Manipulation
 
 
 ### Model load and inference time
@@ -46,23 +52,31 @@ Loading our models into memory already takes more then 2 minutes and gettingt th
 We want to therefore debug our models further in terms of the onnx conversion, since the pytorch model seemed to run way faster. 
 
 ### Changing other feature dimensions
-Also currently the changing of the image is hardcoded to only change the age vector, while we alreay have the code inplace (which is also tested) to change other dimensions, like eye or gender.
+The user can use the sliders in the screen to manipulate different feature vectors on 1 to 10 ratio. These values are later normalized within the api to get the actual range for the specific feature vector to apply.
+Once you are done with changing the slides, you can click submit and then your latent matched image will be mutated by these settings. For example, you can see here an older, more feminine and more smiling Dongyun because he changed those sliders: 
+![image description](latent_manipulation.png)
 
-We are planning to implement sliders in the frontend ASAP so the user has more control over how he or she wants to change the image
 
 
 ### Neural Style Transfer
 We locally ran notebooks to apply NST, which weren't that fast since the model itself had to train. We have been reading the latest papaers regarding faster style transfer and have found some pre-trained models that can achieve NST within seconds.
 
-We are also planning to get this functionality (besides changing the image in the latent space) to the application as soon as possible.
+We have implemented the [Fast Neural Style Transfer](https://github.com/jcjohnson/fast-neural-style) models, from 6 different styles:
+* Candy
+* Mosaic
+* La Muse
+* Starry Night
+* The Scream
+* The Wave
+
+ A user can upload their image and they'll get a styled-transfered image back in a few seconds
 
 
-
-## Screenshots of our application running
-
-![image description](main_screen.png)
-![image description](latent_manipulation.png)
+You can see 1 of the styles applied here:
 ![image description](style_manipulation.png)
+
+
+
 
 
 
