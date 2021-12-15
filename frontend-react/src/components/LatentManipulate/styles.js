@@ -73,15 +73,22 @@ export const FileInput = styled.input`
 `;
 
 export const ImgPreview = styled.img`
-  max-height:30vh;
-  width: 100%;
+  /* min-height:25vh;
+  max-height:35vh; */
+  height: 35vh;
+
+  /* width: 100%; */
+  /* aspect-ratio: 400 / 500; */
 `;
 
 export const ImgResult = styled.img`
-  max-height:30vh;
-  width: 100%;
-`;
+  /* min-height:25vh;
+  max-height:35vh; */
+  height: 35vh;
+  /* width: 100%; */
+  /* aspect-ratio: 400 / 500; */
 
+`;
 
 
 export const ImgHelp = styled.div`

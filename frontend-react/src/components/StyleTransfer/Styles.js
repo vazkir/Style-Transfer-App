@@ -20,6 +20,8 @@ export const StatusPanel = styled.div`
 export const MainUi = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   width: 100%;
 `;
@@ -73,13 +75,21 @@ export const FileInput = styled.input`
 `;
 
 export const ImgPreview = styled.img`
-  max-height:30vh;
-  width: 100%;
+  /* min-height:25vh;
+  max-height:35vh; */
+  height: 35vh;
+
+  /* width: 100%; */
+  /* aspect-ratio: 400 / 500; */
 `;
 
 export const ImgResult = styled.img`
-  max-height:30vh;
-  width: 100%;
+  /* min-height:25vh;
+  max-height:35vh; */
+  height: 35vh;
+  /* width: 100%; */
+  /* aspect-ratio: 400 / 500; */
+
 `;
 
 

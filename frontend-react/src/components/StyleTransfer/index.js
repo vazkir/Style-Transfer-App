@@ -126,8 +126,8 @@ const StyleTransfer = (props) => {
 
     return (
       <MainContainer>
-        <MainTitle>Welcome to the Style Transfer App</MainTitle>
-        <DescrContainer>With this app you can change images you upload. </DescrContainer>
+        <MainTitle>Welcome to the Style Manipulation</MainTitle>
+        <DescrContainer>Simply select a style you want transfered and upload an image</DescrContainer>
         <div>
           <select value={selectedStyle} onChange={handleChange}>
           {styles.map((style, index) => (
@@ -139,30 +139,30 @@ const StyleTransfer = (props) => {
         </div>
         <MainUi>
 
-        <ImgUploadDeck>
-              {matchedImgUriOuput == null
-                ? 
-                <DropZone onClick={() => handleImageUploadClick()}>
-                  <input
-                      type="file"
-                      accept="image/*"
-                      capture="camera"
-                      on
-                      autocomplete="off"
-                      tabindex="-1"
-                      ref={inputRef}
-                      onChange={(event) => handleUploadImg(event)}
-                  />
-                  <ImgPreview src={inputImage}></ImgPreview>
-                  <ImgHelp>Click to take a picture or upload...</ImgHelp>
-                </DropZone>
-                : <ImgResult src={inputImage}></ImgResult>
-              }
-                
-              </ImgUploadDeck>
-              <DisplayResultDeck>
-                  <ImgResult src={matchedImgUriOuput}></ImgResult>
-              </DisplayResultDeck>
+          <ImgUploadDeck>
+            {matchedImgUriOuput == null
+              ? 
+              <DropZone onClick={() => handleImageUploadClick()}>
+                <FileInput
+                    type="file"
+                    accept="image/*"
+                    capture="camera"
+                    on
+                    autocomplete="off"
+                    tabindex="-1"
+                    ref={inputRef}
+                    onChange={(event) => handleUploadImg(event)}
+                />
+                <ImgPreview src={inputImage}></ImgPreview>
+                <ImgHelp>Click to take a picture or upload...</ImgHelp>
+              </DropZone>
+              : <ImgResult src={inputImage}></ImgResult>
+            }
+              
+            </ImgUploadDeck>
+          <DisplayResultDeck>
+              <ImgResult src={matchedImgUriOuput}></ImgResult>
+          </DisplayResultDeck>
         </MainUi>
         <ResetButtonContainer>
             <RestetAllButton 

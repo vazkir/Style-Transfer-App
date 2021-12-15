@@ -52,7 +52,7 @@ const Header = (props) => {
                     </IconButton> */}
                     <Link to="/" className={classes.appLink}>
                         <Typography className={classes.appTitle} >
-                        Style Transfer App
+                        Multifaceted Face Generator
                         </Typography>
                     </Link>
 
@@ -60,17 +60,17 @@ const Header = (props) => {
 
 
                     <div>
-                        <IconButton color="inherit" component={Link} to="/">
-                            <Icon>home</Icon>
-                            <Typography variant="caption">&nbsp;Home</Typography>
-                        </IconButton>
                         {/* <IconButton color="inherit" component={Link} to="/leaderboard">
                             <Icon>leaderboard</Icon>
                             <Typography variant="caption">&nbsp;Leaderboard</Typography>
                         </IconButton> */}
-                        <IconButton color="inherit" component={Link} to="/currentmodel">
-                            <Icon>model_training</Icon>
-                            <Typography variant="caption">&nbsp;Model</Typography>
+                        <IconButton color="inherit" component={Link} to="/laten_manipulate">
+                            <Icon>L</Icon>
+                            <Typography variant="caption">&nbsp;Latent Manipulation</Typography>
+                        </IconButton>
+                        <IconButton color="inherit" component={Link} to="/style_transfer">
+                            <Icon>S</Icon>
+                            <Typography variant="caption">&nbsp;Style Manipulation</Typography>
                         </IconButton>
                         {/* <IconButton color="inherit">
                             <Icon>login</Icon>

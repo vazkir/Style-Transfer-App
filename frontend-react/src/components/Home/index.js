@@ -62,14 +62,14 @@ const Home = (props) => {
           <CardFieldset>
             <Link style={{ textDecoration: 'none' }} to="/laten_manipulate" >
 
-              <CardButton type="button">Latent Manipulation</CardButton>
+              <CardButton type="button">Feature manipulation</CardButton>
             </Link>
           </CardFieldset>
 
           <CardFieldset>
             <Link style={{ textDecoration: 'none' }} to="/style_transfer" >
 
-              <CardButton  type="button" disabled={false}>Style Transfer</CardButton>
+              <CardButton  type="button" disabled={false}>Style Manipulation</CardButton>
             </Link>
 
           </CardFieldset>
