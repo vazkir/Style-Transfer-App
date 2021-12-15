@@ -28,6 +28,10 @@ psp_model = None
 decoder_model = None
 
 
+feature_ranges = {'age_range': 10, 'eye_distance_range': 50, 'eye_eyebrow_distance_range': 50, 'eyes_open_range': 30, 'eye_ratio_range': 30, 
+                'gender_range': 10, 'lip_ratio_range': 30, 'mouth_open_range':80, 'nose_mouth_distance_range': 50,
+                'nose_ratio_range': 30, 'nose_tip_range': 50, 'pitch_range': 10, 'roll_range': 30, 'smile_range': 5, 'yaw_range': 10}
+
 if RUN_LOCAL:
     # Pyenv root is inside this folder
     path_persis_exper =  "../../persistent-folder/experiments"
@@ -203,6 +207,9 @@ class PSPInference:
 
             # Get the degree (int) of the amount we want this feature to be changed
             feat_change_degree = change_degrees_dict[f"{feat_name}_degree"]
+            
+            # To unormalize our ranges
+            feature_range = feature_ranges[f"{feat_name}_range"]
 
             # 0 means nothing has been changed for this vector in terms of degree
             # So we can skip this specific manipulation
@@ -211,7 +218,7 @@ class PSPInference:
                 continue
 
             # Update the latent with the right feature axis to change in the degree specified
-            multiple_latent += (lat_feat_vector * feat_change_degree)
+            multiple_latent += (lat_feat_vector * feat_change_degree * feature_range)
 
         return multiple_latent      
         
