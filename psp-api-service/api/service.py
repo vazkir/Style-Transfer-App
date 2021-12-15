@@ -1,6 +1,6 @@
 import base64
 from datetime import datetime
-from fastapi import FastAPI
+from fastapi import Body, FastAPI
 from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
 import asyncio
@@ -11,6 +11,7 @@ import os
 from fastapi import File
 from tempfile import TemporaryDirectory
 from api.model import psp_inf
+from api.local import RUN_LOCAL
 
 # from api.tracker import TrackerService
 # 
@@ -19,6 +20,15 @@ from api.model import psp_inf
 # tracker_service = TrackerService()
 
 local_psp_path = "/persistent/psp"
+
+
+if RUN_LOCAL:
+    # Pyenv root is inside this folder
+    path_psp_exper =  "../../persistent-folder/psp"
+    local_psp_path = os.path.join(os.path.dirname(__file__),path_psp_exper)
+    
+
+
 local_psp_inputs_path = f"{local_psp_path}/inputs"
 local_psp_outputs_path = f"{local_psp_path}/outputs"
 
@@ -116,17 +126,40 @@ def run_latent_manipulate(latent_id, inp_latent_path, change_dir_dict):
     return encoded_image_string, changed_latent
 
 
+from typing import List
+from pydantic import BaseModel
+from typing import Dict, Any
+
+class Item(BaseModel):
+    name: str
+    value: float
+
+class ItemList(BaseModel):
+    latent_id: str
+    values: List[Item]
+    
+
 @app.post("/mutate_latent")
 async def mutate_latent(
-    latent_id: str = "01-12-2021_02-08"
+    data: Dict[Any, Any] = None
 ):
-
-    latent_path = os.path.join(local_psp_inputs_path, f"{latent_id}_matched_latent.npy")    
-    change_age_dir = {'age_degree': 8, 'eye_distance_degree': 0, 'eye_eyebrow_distance_degree': 0,
+  
+    change_items = {'age_degree': 0, 'eye_distance_degree': 0, 'eye_eyebrow_distance_degree': 0,
                             'eye_ratio_degree': 0,  'eyes_open_degree': 0, 'gender_degree': 1, 
                             'lip_ratio_degree': 0, 'mouth_open_degree': 0, 'nose_mouth_distance_degree': 0, 'nose_ratio_degree': 0, 
                             'nose_tip_degree': 0, 'pitch_degree': 0, 'roll_degree': 0, 'smile_degree': 0, 'yaw_degree': 0}
 
+
+    latent_id = data['latent_id']
+    new_change_items = data['values']
+
+    for item in new_change_items:
+        change_items[f"{item['name']}_degree"] = item['value']
+        
+    print(change_items)
+
+    latent_path = os.path.join(local_psp_inputs_path, f"{latent_id}_matched_latent.npy")    
+    
 
     encoded_image_string = ""
     changed_latent = []
@@ -137,19 +170,19 @@ async def mutate_latent(
     if save_persistent:
         encoded_image_string, changed_latent = run_latent_manipulate(latent_id,
                                                                      latent_path, 
-                                                                     change_age_dir)
+                                                                     change_items)
     else:
         with TemporaryDirectory() as image_dir:
             encoded_image_string, changed_latent = run_latent_manipulate(latent_id,
                                                                      latent_path, 
-                                                                     change_age_dir)
+                                                                     change_items)
 
     # Yields the image itself along with the matched latent variable
     return {
         "mime" : "image/png",
         "changed_img": encoded_image_string,
         "latent_id":latent_id,
-        # "changed_latent": changed_latent.tolist()
+        "changed_latent": changed_latent.tolist()
     }
     
 
