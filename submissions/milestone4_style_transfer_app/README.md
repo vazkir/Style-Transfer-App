@@ -22,8 +22,6 @@ If you want to actually run the notebooks, then please let use know so we can gi
 
 
 
-
-
 ## PSP API Service
 
 [This folder](https://github.com/vazkir/Style-Transfer-App/tree/main/psp-api-service) contains the api we created that can do the following:
@@ -60,18 +58,70 @@ We are also planning to get this functionality (besides changing the image in th
 
 
 
-## A screenshot of our application running
+## Screenshots of our application running
+
+![image description](main_screen.png)
+![image description](latent_manipulation.png)
+![image description](style_manipulation.png)
 
 
-![image description](frontend-screenshot.png)
 
+
+## Deployement instructions
+
+
+### API's to enable in GCP for Project
+Search for each of these in the GCP search bar and click enable to enable these API's
+* Compute Engine API
+* Service Usage API
+* Cloud Resource Manager API
+* Google Container Registry API
+* Kubernetes Engine API
+
+### Start Deployment Docker Container
+- Make sure you are in the root directory
+-  `cd deployment`
+- Run `sh docker-shell.sh` or `docker-shell.bat` for windows
+- Check versions of tools
+`gcloud --version`
+`kubectl version`
+`kubectl version --client`
+
+- Check if make sure you are authenticated to GCP
+- Run `gcloud auth list`
+
+### Build and Push Docker Containers to GCR
+**This step is only required if you have NOT already done this**
+```
+ansible-playbook deploy-docker-images.yml -i inventory.yml
+```
+
+### Create & Deploy Cluster
+```
+ansible-playbook deploy-k8s-cluster.yml -i inventory.yml --extra-vars cluster_state=present
+```
+
+### If you want to shell into a container in a Pod
+```
+kubectl get pods --namespace=mushroom-app-cluster-namespace
+kubectl get pod api-5d4878c545-47754 --namespace=mushroom-app-cluster-namespace
+kubectl exec --stdin --tty api-5d4878c545-47754 --namespace=mushroom-app-cluster-namespace  -- /bin/bash
+```
+
+### View the App
+* Copy the `nginx_ingress_ip` from the terminal from the create cluster command
+* Go to `http://<YOUR INGRESS IP>.sslip.io`
+
+### Delete Cluster
+```
+ansible-playbook deploy-k8s-cluster.yml -i inventory.yml --extra-vars cluster_state=absent
+```
 
 
 ## A screenshot of our Kuberneters cluster
 
 ![image description](k8_cluster2.png)
 ![image description](k8_cluster.png)
-
 
 
 
