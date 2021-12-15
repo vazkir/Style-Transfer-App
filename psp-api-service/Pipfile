@@ -23,6 +23,7 @@ onnx-tf = "*"
 onnx = "*"
 onnxruntime-gpu = "*"
 pillow = "*"
+opencv-python = "*"
 
 [requires]
 python_version = "3.8"

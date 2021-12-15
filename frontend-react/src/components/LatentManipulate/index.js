@@ -95,7 +95,7 @@ const LatentManipulate = (props) => {
 
         var formData = new FormData();
         formData.append("file", event.target.files[0]);
-        setIndicator("Matchinhg input image to latent representation.....")
+        setIndicator("Matchinhg input image.....")
         setIsLoading(true)
 
         DataService.GetLatentMatch(formData)
